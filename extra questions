@@ -22,3 +22,38 @@ create a headless service named web to facilitate stable networking for the stat
 
 * if a container has no cpu/memory requests/limits, assign a default request of 100m cpu and 50MI memory and a default limit of 200m cpu and 100Mi memory.
 * prevent any container in this namespace from requesting more than 500Mi memory .
+
+5) A developer needs a persistent volume for an application . 
+create a pvc with 
+
+* size 100Mi
+* access mode ReadWriteOnce
+* using the storage class "local-path"
+
+create a pod that mounts this pvc at /data and verify that the volume is automatically created and mounted .
+
+
+
+
+6) Create a storagclass :
+
+Name : fast-storage 
+uses the rancer.io/local-path provisioner 
+sets a Retain reclaim policy 
+uses Immediate binding ( default ) 
+
+
+create a pv and pvc : 
+The pv should use fast-storage 
+configure node affinity so Kubernetes knows where to create the volume 
+the pvc should bind to that pv 
+verify that when the pvc is deleted , the pv remains ( in relased state ) 
+
+
+7) pod security 
+
+Enforce the restricted pod security standard on the namespace restricted-ns .
+pods in that namespace cannot :
+* have privileged access 
+* host networking 
+* have any elevated rights 
